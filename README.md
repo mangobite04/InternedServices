@@ -13,18 +13,19 @@ Objective:
 - **REQ 8** - Give a demo and present the outcome during your 2nd interview.
 
 There are two parts to the setup,
-- **Part 1** - Setting up the network infrastructure (VPC, Subnets, Security Groups)
+- **Part 1** - Setting up the network infrastructure (VPC, Subnets [Public & Private])
 - **Part 2** - Hosting Application on AWS
 - ***Sub Assembly 1*** - Create ASG
 - ***Sub Assembly 2*** - Create Security Groups
 - ***Sub Assembly 3*** - Create Load Balancer
 - ***Sub Assembly 4*** - Launch EC2
+- **Part 3** - Deploy Application on AWS
 - ***Sub Assembly 5*** - Deploy ESPOcrm APP on EC2
 
 
 Assuming you have already setup your AWS CLI for Region `EU West (Ireland)`.
 
-## Part 1 - Create VPC, Subnet, Security Group
+## Part 1 - Create VPC, Subnet, RoutTable, IGW
 ### Setting the AWS Region
 ```sh
 export AWS_DEFAULT_REGION=eu-west-1
@@ -124,6 +125,7 @@ aws ec2 associate-route-table --route-table-id "$routeTableID" --subnet-id "$EUW
 aws ec2 associate-route-table --route-table-id "$routeTableID" --subnet-id "$EUWest1b_WebSubnetID"
 ```
 
+## Part 2 - Create ASG, LB, Launch Configuration, Secuirty Group
 ### Creating a security group
  - Group Name - `WebSecGrp`
  - Description - `Web Security Group for Server's`
@@ -142,5 +144,7 @@ aws ec2 authorize-security-group-ingress --group-id "$WebSecGrpID" --protocol tc
 aws ec2 authorize-security-group-ingress --group-id "$WebSecGrpID" --protocol tcp --port 80 --cidr 0.0.0.0/0
 aws ec2 authorize-security-group-ingress --group-id "$WebSecGrpID" --protocol tcp --port 443 --cidr 0.0.0.0/0
 ```
+
+## Part 3 - Deploy ESPOcrm APP on EC2
 
 >When you specify a security group for a nondefault VPC to the CLI or the API actions, you must use the security group ID and not the security group name to identify the security group.
