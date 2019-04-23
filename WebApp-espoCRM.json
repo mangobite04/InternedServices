@@ -80,7 +80,7 @@
             },
             "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
                 "#!/bin/bash\n",
-                "yum -y install wget\n"
+                "yum -y install wget\n",
                 "wget -P /tmp/ https://s3-eu-west-1.amazonaws.com/s3-yum-repository/APP-EC2-Deploy.sh\n",
                 "chmod 755 /tmp/APP-EC2-Deploy.sh\n",
                 "sudo bash -x /tmp/APP-EC2-Deploy.sh\n"
