@@ -67,7 +67,7 @@
     "WebApplicationServer": {
         "Type": "AWS::EC2::Instance",
         "Properties": {
-            "ImageId": "ami-07140bc02c30028bb",
+            "ImageId": "ami-0fad7378adf284ce0",
             "InstanceType": "t2.micro",
             "Tags": [
                 {
