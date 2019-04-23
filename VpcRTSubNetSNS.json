@@ -1,0 +1,496 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Resources": {
+        "VPCInternedServices": {
+            "Type": "AWS::EC2::VPC",
+            "Properties": {
+                "CidrBlock": "10.0.0.0/16",
+                "EnableDnsHostnames": true,
+                "EnableDnsSupport": true,
+                "InstanceTenancy": "default",
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC"
+                    }
+                ]
+            }
+        },
+        "VPCpubSubnet1SubnetInternedServices": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": "10.0.0.0/19",
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "AvailabilityZone": "eu-west-1a",
+                "MapPublicIpOnLaunch": true,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pubSubnet1"
+                    }
+                ]
+            }
+        },
+        "VPCpubSubnet1RouteTableInternedServices": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pubSubnet1"
+                    }
+                ]
+            }
+        },
+        "VPCpubSubnet1RouteTableAssociationInternedServices": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpubSubnet1RouteTableInternedServices"
+                },
+                "SubnetId": {
+                    "Ref": "VPCpubSubnet1SubnetInternedServices"
+                }
+            }
+        },
+        "VPCpubSubnet1DefaultRouteInternedServices": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpubSubnet1RouteTableInternedServices"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "VPCIGWBInternedServices"
+                }
+            }
+        },
+        "VPCpubSubnet1EIPInternedServices": {
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+                "Domain": "vpc"
+            }
+        },
+        "VPCpubSubnet1NATGatewayInternedServices": {
+            "Type": "AWS::EC2::NatGateway",
+            "Properties": {
+                "AllocationId": {
+                    "Fn::GetAtt": [
+                        "VPCpubSubnet1EIPInternedServices",
+                        "AllocationId"
+                    ]
+                },
+                "SubnetId": {
+                    "Ref": "VPCpubSubnet1SubnetInternedServices"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pubSubnet1"
+                    }
+                ]
+            }
+        },
+        "VPCpubSubnet2SubnetInternedServices": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": "10.0.32.0/19",
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "AvailabilityZone": "eu-west-1b",
+                "MapPublicIpOnLaunch": true,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pubSubnet2"
+                    }
+                ]
+            }
+        },
+        "VPCpubSubnet2RouteTableInternedServices": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pubSubnet2"
+                    }
+                ]
+            }
+        },
+        "VPCpubSubnet2RouteTableAssociationInternedServices": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpubSubnet2RouteTableInternedServices"
+                },
+                "SubnetId": {
+                    "Ref": "VPCpubSubnet2SubnetInternedServices"
+                }
+            }
+        },
+        "VPCpubSubnet2DefaultRouteInternedServices": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpubSubnet2RouteTableInternedServices"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "VPCIGWBInternedServices"
+                }
+            }
+        },
+        "VPCpubSubnet2EIPInternedServices": {
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+                "Domain": "vpc"
+            }
+        },
+        "VPCpubSubnet2NATGatewayInternedServices": {
+            "Type": "AWS::EC2::NatGateway",
+            "Properties": {
+                "AllocationId": {
+                    "Fn::GetAtt": [
+                        "VPCpubSubnet2EIPInternedServices",
+                        "AllocationId"
+                    ]
+                },
+                "SubnetId": {
+                    "Ref": "VPCpubSubnet2SubnetInternedServices"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pubSubnet2"
+                    }
+                ]
+            }
+        },
+        "VPCpubSubnet3SubnetInternedServices": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": "10.0.64.0/19",
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "AvailabilityZone": "eu-west-1c",
+                "MapPublicIpOnLaunch": true,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pubSubnet3"
+                    }
+                ]
+            }
+        },
+        "VPCpubSubnet3RouteTableInternedServices": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pubSubnet3"
+                    }
+                ]
+            }
+        },
+        "VPCpubSubnet3RouteTableAssociationInternedServices": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpubSubnet3RouteTableInternedServices"
+                },
+                "SubnetId": {
+                    "Ref": "VPCpubSubnet3SubnetInternedServices"
+                }
+            }
+        },
+        "VPCpubSubnet3DefaultRouteInternedServices": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpubSubnet3RouteTableInternedServices"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "GatewayId": {
+                    "Ref": "VPCIGWBInternedServices"
+                }
+            }
+        },
+        "VPCpubSubnet3EIPInternedServices": {
+            "Type": "AWS::EC2::EIP",
+            "Properties": {
+                "Domain": "vpc"
+            }
+        },
+        "VPCpubSubnet3NATGatewayInternedServices": {
+            "Type": "AWS::EC2::NatGateway",
+            "Properties": {
+                "AllocationId": {
+                    "Fn::GetAtt": [
+                        "VPCpubSubnet3EIPInternedServices",
+                        "AllocationId"
+                    ]
+                },
+                "SubnetId": {
+                    "Ref": "VPCpubSubnet3SubnetInternedServices"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pubSubnet3"
+                    }
+                ]
+            }
+        },
+        "VPCpvtSubnet1SubnetInternedServices": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": "10.0.96.0/19",
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "AvailabilityZone": "eu-west-1a",
+                "MapPublicIpOnLaunch": false,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pvtSubnet1"
+                    }
+                ]
+            }
+        },
+        "VPCpvtSubnet1RouteTableInternedServices": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pvtSubnet1"
+                    }
+                ]
+            }
+        },
+        "VPCpvtSubnet1RouteTableAssociationInternedServices": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpvtSubnet1RouteTableInternedServices"
+                },
+                "SubnetId": {
+                    "Ref": "VPCpvtSubnet1SubnetInternedServices"
+                }
+            }
+        },
+        "VPCpvtSubnet1DefaultRouteInternedServices": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpvtSubnet1RouteTableInternedServices"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "NatGatewayId": {
+                    "Ref": "VPCpubSubnet1NATGatewayInternedServices"
+                }
+            }
+        },
+        "VPCpvtSubnet2SubnetInternedServices": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": "10.0.128.0/19",
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "AvailabilityZone": "eu-west-1b",
+                "MapPublicIpOnLaunch": false,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pvtSubnet2"
+                    }
+                ]
+            }
+        },
+        "VPCpvtSubnet2RouteTableInternedServices": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pvtSubnet2"
+                    }
+                ]
+            }
+        },
+        "VPCpvtSubnet2RouteTableAssociationInternedServices": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpvtSubnet2RouteTableInternedServices"
+                },
+                "SubnetId": {
+                    "Ref": "VPCpvtSubnet2SubnetInternedServices"
+                }
+            }
+        },
+        "VPCpvtSubnet2DefaultRouteInternedServices": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpvtSubnet2RouteTableInternedServices"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "NatGatewayId": {
+                    "Ref": "VPCpubSubnet2NATGatewayInternedServices"
+                }
+            }
+        },
+        "VPCpvtSubnet3SubnetInternedServices": {
+            "Type": "AWS::EC2::Subnet",
+            "Properties": {
+                "CidrBlock": "10.0.160.0/19",
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "AvailabilityZone": "eu-west-1c",
+                "MapPublicIpOnLaunch": false,
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pvtSubnet3"
+                    }
+                ]
+            }
+        },
+        "VPCpvtSubnet3RouteTableInternedServices": {
+            "Type": "AWS::EC2::RouteTable",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC-pvtSubnet3"
+                    }
+                ]
+            }
+        },
+        "VPCpvtSubnet3RouteTableAssociationInternedServices": {
+            "Type": "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpvtSubnet3RouteTableInternedServices"
+                },
+                "SubnetId": {
+                    "Ref": "VPCpvtSubnet3SubnetInternedServices"
+                }
+            }
+        },
+        "VPCpvtSubnet3DefaultRouteInternedServices": {
+            "Type": "AWS::EC2::Route",
+            "Properties": {
+                "RouteTableId": {
+                    "Ref": "VPCpvtSubnet3RouteTableInternedServices"
+                },
+                "DestinationCidrBlock": "0.0.0.0/0",
+                "NatGatewayId": {
+                    "Ref": "VPCpubSubnet3NATGatewayInternedServices"
+                }
+            }
+        },
+        "VPCIGWBInternedServices": {
+            "Type": "AWS::EC2::InternetGateway",
+            "Properties": {
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": "InternedServices-VPC"
+                    }
+                ]
+            }
+        },
+        "VPCVPCGWInternedServices": {
+            "Type": "AWS::EC2::VPCGatewayAttachment",
+            "Properties": {
+                "VpcId": {
+                    "Ref": "VPCInternedServices"
+                },
+                "InternetGatewayId": {
+                    "Ref": "VPCIGWBInternedServices"
+                }
+            }
+        }
+    },
+    "Outputs": {
+        "VPCpubSubnetIDsInternedServices": {
+            "Value": {
+                "Fn::Join": [
+                    ",",
+                    [
+                        {
+                            "Ref": "VPCpubSubnet1SubnetInternedServices"
+                        },
+                        {
+                            "Ref": "VPCpubSubnet2SubnetInternedServices"
+                        },
+                        {
+                            "Ref": "VPCpubSubnet3SubnetInternedServices"
+                        }
+                    ]
+                ]
+            },
+            "Export": {
+                "Name": "infra:VPCpubSubnetIDsInternedServices"
+            }
+        },
+        "VPCpvtSubnetIDsInternedServices": {
+            "Value": {
+                "Fn::Join": [
+                    ",",
+                    [
+                        {
+                            "Ref": "VPCpvtSubnet1SubnetInternedServices"
+                        },
+                        {
+                            "Ref": "VPCpvtSubnet2SubnetInternedServices"
+                        },
+                        {
+                            "Ref": "VPCpvtSubnet3SubnetInternedServices"
+                        }
+                    ]
+                ]
+            },
+            "Export": {
+                "Name": "infra:VPCpvtSubnetIDsInternedServices"
+            }
+        },
+        "VPCVpcIdInternedServices": {
+            "Value": {
+                "Ref": "VPCInternedServices"
+            },
+            "Export": {
+                "Name": "infra:VPCVpcIdInternedServices"
+            }
+        }
+    }
+}
