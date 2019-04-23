@@ -126,34 +126,109 @@ aws ec2 associate-route-table --route-table-id "$routeTableID" --subnet-id "$EUW
 ```
 
 ## Part 2 - Create ASG, LB, Launch Configuration, Secuirty Group
-### Creating a Auto Scaling group using a launch configuration
+### Creating a Auto Scaling group
 
 ```sh
 {
-    "AutoScalingGroupName": "my-asg",
-    "LaunchTemplate": {
-        "LaunchTemplateId": "lt-0a4872e2c396d941c"
-    },
-    "LifecycleHookSpecificationList": [{
-        "LifecycleHookName": "my-hook",
-        "LifecycleTransition": "autoscaling:EC2_INSTANCE_TERMINATING",
-        "NotificationTargetARN": "arn:aws:sqs:us-west-2:123456789012:my-sqs-queue",
-        "RoleARN": "arn:aws:iam::123456789012:role/my-notification-role",
-        "HeartbeatTimeout": 300,
-        "DefaultResult": "CONTINUE"
-    }],
-    "MinSize": 1,
-    "MaxSize": 5,
-    "VPCZoneIdentifier": "subnet-5ea0c127,subnet-6194ea3b,subnet-c934b782",
-    "Tags": [{
-          "ResourceType": "auto-scaling-group",
-          "ResourceId": "my-asg",
-          "PropagateAtLaunch": true,
-          "Value": "test",
-          "Key": "environment"
-    }]
+      "Type" : "AWS::AutoScaling::AutoScalingGroup",
+      "Properties" : {
+        "VPCZoneIdentifier" : { "Ref" : "Subnets" },
+        "LaunchConfigurationName" : { "Ref" : "LaunchConfig" },
+        "MinSize" : "1",
+        "MaxSize" : "3",
+        "Tags": [
+          {
+              "Key": "Type",
+              "Value": "DTA",
+              "PropagateAtLaunch": "true"
+          },
+          {
+              "Key": "Use",
+              "Value": "WebServer",
+              "PropagateAtLaunch": "true"
+          },
+          {
+              "Key": "Name",
+              "Value": {
+                  "Ref": "InstanceName"
+              },
+              "PropagateAtLaunch": "true"
+          }
+        ],
+        "TargetGroupARNs" : [ { "Ref" : "ALBTargetGroup" } ],
+        "NotificationConfiguration" : {
+          "TopicARN" : { "Ref" : "NotificationTopic" },
+          "NotificationTypes" : [ "autoscaling:EC2_INSTANCE_LAUNCH",
+                                  "autoscaling:EC2_INSTANCE_LAUNCH_ERROR",
+                                  "autoscaling:EC2_INSTANCE_TERMINATE",
+                                  "autoscaling:EC2_INSTANCE_TERMINATE_ERROR"]
+        }
+      },
+      "CreationPolicy" : {
+        "ResourceSignal" : {
+          "Timeout" : "PT15M",
+          "Count"   : "1"
+        }
+      },
+      "UpdatePolicy": {
+        "AutoScalingRollingUpdate": {
+          "MinInstancesInService": "1",
+          "MaxBatchSize": "1",
+          "PauseTime" : "PT15M",
+          "WaitOnResourceSignals": "true"
+        }
+      }
 }
 ```
+
+### Creating a launch configuration for ASG
+
+```sh
+{
+   "LaunchConfig" : {
+      "Type" : "AWS::AutoScaling::LaunchConfiguration",
+      "Metadata" : {
+        "Comment" : "Install a simple application",
+        "AWS::CloudFormation::Init" : {
+          "config" : {
+            "packages" : {
+              "yum" : {
+                "httpd" : []
+              }
+            },
+
+            "services" : {
+              "sysvinit" : {
+                "httpd"    : { "enabled" : "true", "ensureRunning" : "true" }
+              }
+            }
+          }
+        }
+      },
+      "Properties" : {
+        "KeyName" : { "Ref" : "KeyName" },
+        "ImageId" : "ami-d834aba1",
+        "SecurityGroups" : [ { "Ref" : "InstanceSecurityGroup" } ],
+        "InstanceType" : { "Ref" : "InstanceType" },
+        "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
+             "#!/bin/bash -xe\n",
+             "yum update -y aws-cli\n",
+             
+             "/opt/aws/bin/cfn-init -v ",
+             "         --stack ", { "Ref" : "AWS::StackName" },
+             "         --resource LaunchConfig ",
+             "         --region ", { "Ref" : "AWS::Region" }, "\n",
+
+             "/opt/aws/bin/cfn-signal -e $? ",
+             "         --stack ", { "Ref" : "AWS::StackName" },
+             "         --resource WebServerGroup ",
+             "         --region ", { "Ref" : "AWS::Region" }, "\n"
+        ]]}}
+      }
+    }
+}
+```
+
 
 ### Creating a security group
  - Group Name - `WebSecGrp`
