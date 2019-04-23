@@ -12,16 +12,10 @@ Objective:
 - **REQ 7** - Deploy the infrastructure and application on AWS
 - **REQ 8** - Give a demo and present the outcome during your 2nd interview.
 
-There are two parts to the setup,
+There are few parts to the setup,
 - **Part 1** - Setting up the network infrastructure (VPC, Subnets [Public & Private])
 - **Part 2** - Hosting Application on AWS
-- ***Sub Assembly 1*** - Create ASG
-- ***Sub Assembly 2*** - Create Security Groups
-- ***Sub Assembly 3*** - Create Load Balancer
-- ***Sub Assembly 4*** - Launch EC2
 - **Part 3** - Deploy Application on AWS
-- ***Sub Assembly 5*** - Deploy ESPOcrm APP on EC2
-
 
 Assuming you have already setup your AWS CLI for Region `EU West (Ireland)`.
 
