@@ -248,9 +248,9 @@ aws ec2 authorize-security-group-ingress --group-id "$WebSecGrpID" --protocol tc
 ## Part 3 - Deploy ESPOcrm APP on EC2
 
 ```sh
-wget https://s3-eu-west-1.amazonaws.com/s3-yum-repository/APP-EC2-Deploy.sh -P /tmp/
-chmod 755 /tmp/APP-EC2-Deploy.sh
-bash -x /tmp/APP-EC2-Deploy.sh
+sudo wget https://s3-eu-west-1.amazonaws.com/s3-yum-repository/APP-EC2-Deploy.sh -P /tmp/
+sudo chmod 755 /tmp/APP-EC2-Deploy.sh
+sudo bash -x /tmp/APP-EC2-Deploy.sh
 ```
 
 >When you specify a security group for a nondefault VPC to the CLI or the API actions, you must use the security group ID and not the security group name to identify the security group.
