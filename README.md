@@ -66,16 +66,18 @@ aws ec2 create-tags --resources $internetGatewayId --tags 'Key=Name,Value=tmpVPC
 
 | VPC Range    | Availability Zone  | Region        | Reservation Purpose | IP Ranges      | IP Range        |
 |--------------|--------------------|---------------|---------------------|----------------|-----------------|
-| 10.15.0.0/23 |                    |               |                     |                |                 |
-|              | AVZ1               | EU-West-1a    |                     | 10.15.0.0/24   |                 |
-|              | AVZ1               |               | Private Subnet      |                | 10.15.0.0/25    |
-|              | AVZ1               |               | Public Subnet       |                | 10.15.0.128/26  |
-|              | AVZ1               |               | Spare Subnet        |                |                 |
+| 10.0.0.0/16  |                    |               |                     |                |                 |
+|              | AVZ1               | eu-west       | eu-west-1a          |                |                 |
+|              | AVZ1               |               | Private Subnet      |                | 10.0.96.0/19    |
+|              | AVZ1               |               | Public Subnet       |                |  10.0.0.0/19    |
 |              |                    |               |                     |                |                 |
-|              | AVZ2               | EU-West-1b    |                     | 10.15.1.0/24   |                 |
-|              | AVZ1               |               | Private Subnet      |                | 10.15.1.0/25    |
-|              | AVZ1               |               | Public Subnet       |                | 10.15.1.128/26  |
-|              | AVZ2               |               | Spare Subnet        |                |                 |
+|              | AVZ2               | eu-west       | eu-west-1b          |                |                 |
+|              | AVZ1               |               | Private Subnet      |                | 10.0.128.0/19   |
+|              | AVZ1               |               | Public Subnet       |                |  10.0.32.0/19   |
+|              |                    |               |                     |                |                 |
+|              | AVZ2               | eu-west       | eu-west-1c          |                |                 |
+|              | AVZ1               |               | Private Subnet      |                | 10.0.160.0/19   |
+|              | AVZ1               |               | Public Subnet       |                |  10.0.0.64/19   |
 
 
 ### Creating subnets in Avaiability Zone - AVZ1
