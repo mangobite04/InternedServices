@@ -1,0 +1,98 @@
+{
+"AWSTemplateFormatVersion": "2010-09-09",
+"Parameters": {
+    "DevServerKeyPair": {
+        "Description": "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+        "Type": "AWS::EC2::KeyPair::KeyName",
+        "ConstraintDescription": "Must be the name of an existing EC2 KeyPair."
+    }
+},
+"Resources": {
+    "WebApplicationServerSG": {
+        "Type": "AWS::EC2::SecurityGroup",
+        "Properties": {
+            "VpcId": {
+                "Fn::ImportValue": "infra:VPCVpcIdInternedServices"
+            },
+            "GroupDescription": "Enable HTTP, HTTPS and SSH access",
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "WebApplicationServer Service Group"
+                }
+            ],
+            "SecurityGroupIngress": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "443",
+                    "ToPort": "443",
+                    "CidrIp": "0.0.0.0/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "80",
+                    "ToPort": "80",
+                    "CidrIp": "0.0.0.0/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "22",
+                    "ToPort": "22",
+                    "CidrIp": "0.0.0.0/0"
+                }
+            ],
+            "SecurityGroupEgress": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "443",
+                    "ToPort": "443",
+                    "CidrIp": "0.0.0.0/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "80",
+                    "ToPort": "80",
+                    "CidrIp": "0.0.0.0/0"
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": "22",
+                    "ToPort": "22",
+                    "CidrIp": "0.0.0.0/0"
+                }
+            ]
+        }
+    },
+    "WebApplicationServer": {
+        "Type": "AWS::EC2::Instance",
+        "Properties": {
+            "ImageId": "ami-d834aba1",
+            "InstanceType": "t2.micro",
+            "Tags": [
+                {
+                    "Key": "Name",
+                    "Value": "WebApplicationServer"
+                }
+            ],
+            "KeyName": {
+                "Ref": "DevServerKeyPair"
+            },
+            "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
+                "#!/bin/bash\n",
+                "yum -y install wget\n"
+                "wget https://s3-eu-west-1.amazonaws.com/s3-yum-repository/APP-EC2-Deploy.sh -P /tmp/\n",
+                "chmod 755 /tmp/APP-EC2-Deploy.sh\n",
+                "sudo bash -x /tmp/APP-EC2-Deploy.sh\n"
+            ]]}},
+            "NetworkInterfaces": [
+                {
+                    "SubnetId": "subnet-04c967bce583d3dc3",
+                    "AssociatePublicIpAddress": "true",
+                    "DeviceIndex": "0",
+                    "GroupSet": [{ "Ref" : "WebApplicationServerSG" }]
+                }
+            ]
+        }
+    }
+  }
+}
