@@ -14,7 +14,13 @@ Objective:
 
 There are two parts to the setup,
 - **Part 1** - Setting up the network infrastructure (VPC, Subnets, Security Groups)
-- **Part 2** - Hosting Application on AWS (Create EC2, Security Groups)
+- **Part 2** - Hosting Application on AWS
+- ***Sub Assembly 1*** - Create ASG
+- ***Sub Assembly 2*** - Create Security Groups
+- ***Sub Assembly 3*** - Create Load Balancer
+- ***Sub Assembly 4*** - Launch EC2
+- ***Sub Assembly 5*** - Deploy ESPOcrm APP on EC2
+
 
 Assuming you have already setup your AWS CLI for Region `EU West (Ireland)`.
 
