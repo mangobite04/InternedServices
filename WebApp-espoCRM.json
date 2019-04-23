@@ -4,7 +4,8 @@
     "DevServerKeyPair": {
         "Description": "Name of an existing EC2 KeyPair to enable SSH access to the instance",
         "Type": "AWS::EC2::KeyPair::KeyName",
-        "ConstraintDescription": "Must be the name of an existing EC2 KeyPair."
+        "ConstraintDescription": "Must be the name of an existing EC2 KeyPair.",
+        "Default": "my_keypair_name"
     }
 },
 "Resources": {
@@ -66,7 +67,7 @@
     "WebApplicationServer": {
         "Type": "AWS::EC2::Instance",
         "Properties": {
-            "ImageId": "ami-d834aba1",
+            "ImageId": "ami-07140bc02c30028bb",
             "InstanceType": "t2.micro",
             "Tags": [
                 {
