@@ -126,6 +126,35 @@ aws ec2 associate-route-table --route-table-id "$routeTableID" --subnet-id "$EUW
 ```
 
 ## Part 2 - Create ASG, LB, Launch Configuration, Secuirty Group
+### Creating a Auto Scaling group using a launch configuration
+
+```sh
+{
+    "AutoScalingGroupName": "my-asg",
+    "LaunchTemplate": {
+        "LaunchTemplateId": "lt-0a4872e2c396d941c"
+    },
+    "LifecycleHookSpecificationList": [{
+        "LifecycleHookName": "my-hook",
+        "LifecycleTransition": "autoscaling:EC2_INSTANCE_TERMINATING",
+        "NotificationTargetARN": "arn:aws:sqs:us-west-2:123456789012:my-sqs-queue",
+        "RoleARN": "arn:aws:iam::123456789012:role/my-notification-role",
+        "HeartbeatTimeout": 300,
+        "DefaultResult": "CONTINUE"
+    }],
+    "MinSize": 1,
+    "MaxSize": 5,
+    "VPCZoneIdentifier": "subnet-5ea0c127,subnet-6194ea3b,subnet-c934b782",
+    "Tags": [{
+          "ResourceType": "auto-scaling-group",
+          "ResourceId": "my-asg",
+          "PropagateAtLaunch": true,
+          "Value": "test",
+          "Key": "environment"
+    }]
+}
+```
+
 ### Creating a security group
  - Group Name - `WebSecGrp`
  - Description - `Web Security Group for Server's`
