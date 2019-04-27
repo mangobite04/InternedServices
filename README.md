@@ -66,7 +66,7 @@ aws ec2 create-tags --resources $internetGatewayId --tags 'Key=Name,Value=tmpVPC
 
 | VPC Range    | Availability Zone  | Region        | Reservation Purpose | IP Ranges      | IP Range        |
 |--------------|--------------------|---------------|---------------------|----------------|-----------------|
-| 10.0.0.0/16  |                    |               |                     |                |                 |
+| 10.0.0.0/19  |                    |               |                     |                |                 |
 |              | AVZ1               | eu-west       | eu-west-1a          |                |                 |
 |              | AVZ1               |               | Private Subnet      |                | 10.0.96.0/19    |
 |              | AVZ1               |               | Public Subnet       |                |  10.0.0.0/19    |
